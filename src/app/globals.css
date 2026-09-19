@@ -1,26 +1,156 @@
 @import "tailwindcss";
 
+/* HiretaX Design System - Global Styles */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand Colors */
+  --color-primary: 209 73% 58%;
+  --color-primary-hover: 209 73% 52%;
+  --color-primary-active: 209 73% 46%;
+  --color-primary-subtle: 209 73% 96%;
+  --color-primary-muted: 209 40% 85%;
+  
+  /* Backgrounds - Warm neutrals */
+  --color-background: 40 30% 97%;
+  --color-background-elevated: 0 0% 100%;
+  --color-background-muted: 40 20% 95%;
+  
+  /* Surface */
+  --color-surface: 0 0% 100%;
+  --color-surface-elevated: 0 0% 100%;
+  --color-surface-muted: 40 20% 98%;
+  
+  /* Text */
+  --color-foreground: 0 0% 10%;
+  --color-foreground-muted: 0 0% 45%;
+  --color-foreground-subtle: 0 0% 60%;
+  
+  /* Border */
+  --color-border: 0 0% 89%;
+  --color-border-muted: 0 0% 94%;
+  --color-border-strong: 0 0% 80%;
+  
+  /* Semantic Colors */
+  --color-success: 142 76% 36%;
+  --color-success-bg: 142 76% 96%;
+  --color-success-border: 142 76% 85%;
+  
+  --color-warning: 38 92% 50%;
+  --color-warning-bg: 38 92% 96%;
+  --color-warning-border: 38 92% 85%;
+  
+  --color-error: 0 84% 60%;
+  --color-error-bg: 0 84% 96%;
+  --color-error-border: 0 84% 85%;
+  
+  --color-info: 199 89% 48%;
+  --color-info-bg: 199 89% 96%;
+  --color-info-border: 199 89% 85%;
+  
+  /* Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Colors */
+  --color-primary: hsl(var(--color-primary));
+  --color-primary-hover: hsl(var(--color-primary-hover));
+  --color-primary-active: hsl(var(--color-primary-active));
+  --color-primary-subtle: hsl(var(--color-primary-subtle));
+  --color-primary-muted: hsl(var(--color-primary-muted));
+  
+  --color-background: hsl(var(--color-background));
+  --color-background-elevated: hsl(var(--color-background-elevated));
+  --color-background-muted: hsl(var(--color-background-muted));
+  
+  --color-surface: hsl(var(--color-surface));
+  --color-surface-elevated: hsl(var(--color-surface-elevated));
+  --color-surface-muted: hsl(var(--color-surface-muted));
+  
+  --color-foreground: hsl(var(--color-foreground));
+  --color-foreground-muted: hsl(var(--color-foreground-muted));
+  --color-foreground-subtle: hsl(var(--color-foreground-subtle));
+  
+  --color-border: hsl(var(--color-border));
+  --color-border-muted: hsl(var(--color-border-muted));
+  --color-border-strong: hsl(var(--color-border-strong));
+  
+  --color-success: hsl(var(--color-success));
+  --color-success-bg: hsl(var(--color-success-bg));
+  --color-success-border: hsl(var(--color-success-border));
+  
+  --color-warning: hsl(var(--color-warning));
+  --color-warning-bg: hsl(var(--color-warning-bg));
+  --color-warning-border: hsl(var(--color-warning-border));
+  
+  --color-error: hsl(var(--color-error));
+  --color-error-bg: hsl(var(--color-error-bg));
+  --color-error-border: hsl(var(--color-error-border));
+  
+  --color-info: hsl(var(--color-info));
+  --color-info-bg: hsl(var(--color-info-bg));
+  --color-info-border: hsl(var(--color-info-border));
+  
+  /* Fonts */
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+  
+  /* Radius */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+  --radius-full: var(--radius-full);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Base Styles */
+* {
+  border-color: hsl(var(--color-border));
+}
+
+html {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: hsl(var(--color-background));
+  color: hsl(var(--color-foreground));
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Focus visible styles */
+*:focus-visible {
+  outline: 2px solid hsl(var(--color-primary));
+  outline-offset: 2px;
+}
+
+/* Typography helpers */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Selection */
+::selection {
+  background-color: hsl(var(--color-primary-subtle));
+  color: hsl(var(--color-foreground));
 }
