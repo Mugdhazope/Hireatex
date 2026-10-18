@@ -4,12 +4,13 @@ import type { ApplicationStatus } from '@/types'
 
 interface StatusBadgeProps {
   status: ApplicationStatus
+  audience?: 'hr' | 'candidate'
 }
 
-export function StatusBadge({ status }: StatusBadgeProps) {
+export function StatusBadge({ status, audience = 'candidate' }: StatusBadgeProps) {
   return (
     <Badge variant="outline" className={getStatusColor(status)}>
-      {getStatusLabel(status)}
+      {getStatusLabel(status, audience)}
     </Badge>
   )
 }

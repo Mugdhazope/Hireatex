@@ -9,10 +9,12 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import { DEMO_HR_PASSWORD, hrUsers as seedHrUsers } from '@/data/hr-users'
 import { lsGet, lsRemove, lsSet } from '@/lib/storage'
-import type { AuthUser, Candidate } from '@/types'
+import type { AuthUser, Candidate, HRUser } from '@/types'
 
 const AUTH_KEY = 'auth_session'
+const HR_USERS_KEY = 'hr_users'
 export const DEMO_OTP = '123456'
 export const DEMO_EMAIL = 'sarah.chen@email.com'
 export const DEMO_CANDIDATE_ID = 'cand-1'
@@ -44,6 +46,12 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
+
+function lookupHrUser(email: string): HRUser | undefined {
+  const stored = lsGet<HRUser[]>(HR_USERS_KEY)
+  const users = stored?.length ? stored : seedHrUsers
+  return users.find((u) => u.email.toLowerCase() === email.toLowerCase())
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null)
@@ -78,55 +86,70 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { error: 'Email and password are required.' }
       }
 
-      if (role === 'candidate') {
-        // Demo seed user
-        if (email.toLowerCase() === DEMO_EMAIL) {
-          const authUser: AuthUser = {
-            id: DEMO_CANDIDATE_ID,
-            name: 'Sarah Chen',
-            email: DEMO_EMAIL,
-            role: 'candidate',
-            candidateId: DEMO_CANDIDATE_ID,
-            emailVerified: true,
-          }
-          persist(authUser)
-          return { user: authUser }
+      if (role === 'hr' || role === 'admin') {
+        const hr = lookupHrUser(email)
+        if (!hr) {
+          return { error: 'No HR account found for this email.' }
         }
-
-        // Look up by email from localStorage candidates blob
-        const candidates = lsGet<Candidate[]>('candidates') ?? []
-        const match = candidates.find(
-          (c) => c.email.toLowerCase() === email.toLowerCase()
-        )
-        if (match) {
-          if (match.password && match.password !== password) {
-            return { error: 'Incorrect password.' }
-          }
-          const authUser: AuthUser = {
-            id: match.id,
-            name: match.fullName,
-            email: match.email,
-            role: 'candidate',
-            candidateId: match.id,
-            emailVerified: match.emailVerified,
-          }
-          persist(authUser)
-          return { user: authUser }
+        if (!hr.active) {
+          return { error: 'This account is deactivated. Contact an admin.' }
         }
-
-        // First-time login without prior register (dev convenience)
-        return { error: 'No account found. Create an account first.' }
+        const expected = hr.password ?? DEMO_HR_PASSWORD
+        if (password !== expected) {
+          return { error: 'Incorrect password.' }
+        }
+        if (role === 'admin' && hr.role !== 'admin') {
+          return { error: 'Admin access required. Use the HR portal instead.' }
+        }
+        if (role === 'hr' && hr.role === 'admin') {
+          // Allow admin through HR login → redirect handled by UI to /admin
+        }
+        const authUser: AuthUser = {
+          id: hr.id,
+          name: hr.fullName,
+          email: hr.email,
+          role: hr.role,
+          hrId: hr.id,
+          emailVerified: true,
+        }
+        persist(authUser)
+        return { user: authUser }
       }
 
-      const authUser: AuthUser = {
-        id: `${role}-${Date.now()}`,
-        name: email.split('@')[0],
-        email,
-        role,
-        emailVerified: true,
+      if (email.toLowerCase() === DEMO_EMAIL) {
+        const authUser: AuthUser = {
+          id: DEMO_CANDIDATE_ID,
+          name: 'Sarah Chen',
+          email: DEMO_EMAIL,
+          role: 'candidate',
+          candidateId: DEMO_CANDIDATE_ID,
+          emailVerified: true,
+        }
+        persist(authUser)
+        return { user: authUser }
       }
-      persist(authUser)
-      return { user: authUser }
+
+      const candidates = lsGet<Candidate[]>('candidates') ?? []
+      const match = candidates.find(
+        (c) => c.email.toLowerCase() === email.toLowerCase()
+      )
+      if (match) {
+        if (match.password && match.password !== password) {
+          return { error: 'Incorrect password.' }
+        }
+        const authUser: AuthUser = {
+          id: match.id,
+          name: match.fullName,
+          email: match.email,
+          role: 'candidate',
+          candidateId: match.id,
+          emailVerified: match.emailVerified,
+        }
+        persist(authUser)
+        return { user: authUser }
+      }
+
+      return { error: 'No account found. Create an account first.' }
     },
     [persist]
   )
@@ -225,7 +248,6 @@ export function useAuth() {
   return ctx
 }
 
-/** Legacy helpers for non-React callers */
 export function getCurrentUser(): AuthUser | null {
   return lsGet<AuthUser>(AUTH_KEY)
 }

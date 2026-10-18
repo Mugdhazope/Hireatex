@@ -1,13 +1,11 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { JobCard } from '@/components/jobs/job-card'
+import { FeaturedJobs } from '@/components/jobs/featured-jobs'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
-import { jobs } from '@/data/jobs'
 import { ArrowRight, CheckCircle } from 'lucide-react'
 
 export default function Home() {
-  const featuredJobs = jobs.slice(0, 6)
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -134,36 +132,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Featured Jobs */}
-        <section className="py-16 md:py-24 bg-surface">
-          <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
-                  Featured Jobs
-                </h2>
-                <p className="text-foreground-muted">
-                  Explore opportunities from leading companies.
-                </p>
-              </div>
-              <Button variant="outline" asChild className="hidden sm:flex">
-                <Link href="/jobs">View All</Link>
-              </Button>
-            </div>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredJobs.map((job) => (
-                <JobCard key={job.id} job={job} />
-              ))}
-            </div>
-
-            <div className="mt-8 text-center sm:hidden">
-              <Button variant="outline" asChild className="w-full">
-                <Link href="/jobs">View All Jobs</Link>
-              </Button>
-            </div>
-          </div>
-        </section>
+        <FeaturedJobs />
 
         {/* CTA Section */}
         <section className="py-16 md:py-24">

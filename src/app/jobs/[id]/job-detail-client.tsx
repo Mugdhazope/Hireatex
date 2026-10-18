@@ -9,20 +9,38 @@ import { JobMeta } from '@/components/jobs/job-meta'
 import { ApplyJobDialog } from '@/components/jobs/apply-job-dialog'
 import { formatDate, cn } from '@/lib/utils'
 import { useAuth } from '@/lib/mock-auth'
-import { useCandidateStore } from '@/lib/candidate-store'
+import { useRecruitmentStore } from '@/lib/recruitment-store'
 import { Bookmark } from 'lucide-react'
 import { toast } from 'sonner'
-import type { Job } from '@/types'
 
-export function JobDetailClient({ job }: { job: Job }) {
+export function JobDetailClient({ jobId }: { jobId: string }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user } = useAuth()
-  const store = useCandidateStore()
+  const store = useRecruitmentStore()
+  const job = store.getJob(jobId)
+
   const autoApply =
     searchParams.get('apply') === '1' && user?.role === 'candidate'
   const [applyOpen, setApplyOpen] = useState(autoApply)
   const [autoDismissed, setAutoDismissed] = useState(false)
+
+  if (!store.ready) {
+    return <p className="text-sm text-foreground-muted">Loading…</p>
+  }
+
+  if (!job || job.status !== 'active') {
+    return (
+      <div className="py-12 text-center">
+        <p className="text-foreground-muted mb-4">
+          This job is unavailable or no longer active.
+        </p>
+        <Button asChild variant="outline">
+          <Link href="/jobs">Browse jobs</Link>
+        </Button>
+      </div>
+    )
+  }
 
   const candidateId = user?.role === 'candidate' ? user.candidateId || user.id : null
   const saved = candidateId ? store.isJobSaved(candidateId, job.id) : false

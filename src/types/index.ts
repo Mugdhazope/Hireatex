@@ -8,6 +8,7 @@ export type ApplicationStatus =
   | 'interview'
   | 'selected'
   | 'rejected'
+  | 'saved_for_later'
 
 export type JobType =
   | 'full-time'
@@ -37,6 +38,20 @@ export type QualificationLevel =
   | 'masters'
   | 'phd'
   | 'md'
+
+export type AuditAction =
+  | 'status_change'
+  | 'note_added'
+  | 'assigned'
+  | 'saved_for_later'
+  | 'unsaved_for_later'
+  | 'job_created'
+  | 'job_published'
+  | 'job_unpublished'
+  | 'job_closed'
+  | 'job_updated'
+  | 'talent_saved'
+  | 'talent_removed'
 
 export interface Skill {
   id: string
@@ -87,6 +102,7 @@ export interface Job {
   jobType: JobType
   experienceLevel: ExperienceLevel
   category: JobCategory
+  department?: string
   qualifications: QualificationLevel[]
   skills: Skill[]
   about: string
@@ -96,6 +112,10 @@ export interface Job {
   postedDate: Date
   status: 'active' | 'paused' | 'closed' | 'draft'
   applicationCount?: number
+  createdByHrId?: string
+  salaryMin?: number
+  salaryMax?: number
+  deadline?: Date
 }
 
 export interface Candidate {
@@ -135,11 +155,36 @@ export interface Application {
   coverLetter?: string
   notes?: string
   internalNotes?: string
+  assignedHrId?: string
+  savedForLaterBy?: string[]
 }
 
 export interface SavedJob {
   candidateId: string
   jobId: string
+  savedAt: Date
+}
+
+export interface AuditEvent {
+  id: string
+  applicationId?: string
+  jobId?: string
+  candidateId?: string
+  actorHrId: string
+  action: AuditAction
+  note?: string
+  fromStatus?: ApplicationStatus
+  toStatus?: ApplicationStatus
+  timestamp: Date
+  meta?: Record<string, string>
+}
+
+export interface HrTalentSave {
+  id: string
+  hrId: string
+  candidateId: string
+  tags: string[]
+  note?: string
   savedAt: Date
 }
 
@@ -163,6 +208,7 @@ export interface AuthUser {
   email: string
   role: 'candidate' | 'hr' | 'admin'
   candidateId?: string
+  hrId?: string
   emailVerified?: boolean
 }
 
@@ -198,4 +244,27 @@ export interface ParsedResumeData {
   }>
   rawText: string
   warnings: string[]
+}
+
+/** Candidate-facing status labels (no HR jargon for internals) */
+export const CANDIDATE_STATUS_LABELS: Record<ApplicationStatus, string> = {
+  applied: 'Applied',
+  under_review: 'Under Review',
+  shortlisted: 'Shortlisted',
+  forwarded: 'Forwarded',
+  interview: 'Interview',
+  selected: 'Offered',
+  rejected: 'Rejected',
+  saved_for_later: 'Under Review',
+}
+
+export const HR_STATUS_LABELS: Record<ApplicationStatus, string> = {
+  applied: 'New',
+  under_review: 'Under Review',
+  shortlisted: 'Shortlisted',
+  forwarded: 'Forwarded',
+  interview: 'Interview',
+  selected: 'Offered',
+  rejected: 'Rejected',
+  saved_for_later: 'Saved for Later',
 }

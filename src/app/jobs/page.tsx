@@ -7,7 +7,7 @@ import { PageHeader } from '@/components/common/page-header'
 import { FilterBar, type JobFilters } from '@/components/jobs/filter-bar'
 import { JobCard } from '@/components/jobs/job-card'
 import { EmptyState } from '@/components/common/empty-state'
-import { jobs } from '@/data/jobs'
+import { useRecruitmentStore } from '@/lib/recruitment-store'
 
 const emptyFilters: JobFilters = {
   query: '',
@@ -18,12 +18,13 @@ const emptyFilters: JobFilters = {
 }
 
 export default function JobsPage() {
+  const store = useRecruitmentStore()
   const [filters, setFilters] = useState<JobFilters>(emptyFilters)
 
   const filtered = useMemo(() => {
     const q = filters.query.trim().toLowerCase()
     const loc = filters.location.trim().toLowerCase()
-    return jobs.filter((job) => {
+    return store.jobs.filter((job) => {
       if (job.status !== 'active') return false
       if (filters.experience && job.experienceLevel !== filters.experience) return false
       if (filters.jobType && job.jobType !== filters.jobType) return false
@@ -42,7 +43,7 @@ export default function JobsPage() {
       }
       return true
     })
-  }, [filters])
+  }, [filters, store.jobs])
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -58,7 +59,9 @@ export default function JobsPage() {
             <p className="mb-4 text-sm text-foreground-muted">
               Showing {filtered.length} job{filtered.length === 1 ? '' : 's'}
             </p>
-            {filtered.length === 0 ? (
+            {!store.ready ? (
+              <p className="text-sm text-foreground-muted">Loading jobs…</p>
+            ) : filtered.length === 0 ? (
               <EmptyState
                 title="No jobs match"
                 description="Try adjusting your search or filters."

@@ -1,18 +1,19 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/lib/mock-auth'
 import { toast } from 'sonner'
 
-export default function HRLoginPage() {
+function HRLoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { login } = useAuth()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('marcus@hiretaex.com')
+  const [password, setPassword] = useState('demo123')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -21,9 +22,53 @@ export default function HRLoginPage() {
       toast.error(result.error)
       return
     }
-    router.push('/hr')
+    if (result.user.role === 'admin') {
+      router.push('/admin')
+      return
+    }
+    const next = searchParams.get('next')
+    router.push(next && next.startsWith('/hr') ? next : '/hr')
   }
 
+  return (
+    <div className="rounded-lg border border-border bg-surface p-8 shadow-sm">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="marcus@hiretaex.com"
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <Button type="submit" className="w-full">
+          Sign In
+        </Button>
+      </form>
+      <div className="mt-6 rounded-md bg-background-muted p-3 text-xs text-foreground-muted space-y-1">
+        <p className="font-medium text-foreground">Demo accounts</p>
+        <p>HR1: marcus@hiretaex.com / demo123</p>
+        <p>HR2: samantha@hiretaex.com / demo123</p>
+        <p>Admin: rachel@hiretaex.com / demo123</p>
+      </div>
+    </div>
+  )
+}
+
+export default function HRLoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="w-full max-w-md space-y-8">
@@ -33,37 +78,9 @@ export default function HRLoginPage() {
           </h1>
           <p className="text-foreground-muted">HR Portal</p>
         </div>
-
-        <div className="rounded-lg border border-border bg-surface p-8 shadow-sm">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="hr@hiretaex.com"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-
-            <Button type="submit" className="w-full">
-              Sign In
-            </Button>
-          </form>
-        </div>
+        <Suspense fallback={<div className="h-64 rounded-lg border border-border bg-surface" />}>
+          <HRLoginForm />
+        </Suspense>
       </div>
     </div>
   )

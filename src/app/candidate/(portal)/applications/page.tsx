@@ -24,7 +24,7 @@ import { EmptyState } from '@/components/common/empty-state'
 import { useAuth } from '@/lib/mock-auth'
 import { useCandidateStore } from '@/lib/candidate-store'
 import { formatDate } from '@/lib/utils'
-import type { ApplicationStatus } from '@/types'
+import { CANDIDATE_STATUS_LABELS, type ApplicationStatus } from '@/types'
 
 export default function ApplicationsPage() {
   const router = useRouter()
@@ -68,7 +68,7 @@ export default function ApplicationsPage() {
               ] as ApplicationStatus[]
             ).map((s) => (
               <SelectItem key={s} value={s}>
-                {s.replace('_', ' ')}
+                {CANDIDATE_STATUS_LABELS[s]}
               </SelectItem>
             ))}
           </SelectContent>

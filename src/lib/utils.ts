@@ -50,12 +50,36 @@ export function getStatusColor(status: ApplicationStatus): string {
       return 'bg-green-100 text-green-700 border-green-200'
     case 'rejected':
       return 'bg-red-100 text-red-700 border-red-200'
+    case 'saved_for_later':
+      return 'bg-orange-100 text-orange-700 border-orange-200'
     default:
       return 'bg-gray-100 text-gray-700 border-gray-200'
   }
 }
 
-export function getStatusLabel(status: ApplicationStatus): string {
+export function getStatusLabel(status: ApplicationStatus, audience: 'hr' | 'candidate' = 'candidate'): string {
+  if (audience === 'hr') {
+    switch (status) {
+      case 'applied':
+        return 'New'
+      case 'under_review':
+        return 'Under Review'
+      case 'shortlisted':
+        return 'Shortlisted'
+      case 'forwarded':
+        return 'Forwarded'
+      case 'interview':
+        return 'Interview'
+      case 'selected':
+        return 'Offered'
+      case 'rejected':
+        return 'Rejected'
+      case 'saved_for_later':
+        return 'Saved for Later'
+      default:
+        return status
+    }
+  }
   switch (status) {
     case 'applied':
       return 'Applied'
@@ -68,9 +92,11 @@ export function getStatusLabel(status: ApplicationStatus): string {
     case 'interview':
       return 'Interview'
     case 'selected':
-      return 'Selected'
+      return 'Offered'
     case 'rejected':
       return 'Rejected'
+    case 'saved_for_later':
+      return 'Under Review'
     default:
       return status
   }
