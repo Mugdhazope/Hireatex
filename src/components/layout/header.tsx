@@ -136,21 +136,23 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/90">
-      <div className="container mx-auto flex h-14 max-w-7xl items-center gap-3 px-4 sm:h-16 sm:px-6 lg:px-8">
-        <Link href="/" className="shrink-0">
+      <div className="relative container mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:h-16 sm:px-6 lg:px-8">
+        <Link href="/" className="relative z-10 shrink-0">
           <span className="text-lg font-semibold tracking-tight text-foreground sm:text-xl">
             Hire<span className="text-primary">taX</span>
           </span>
         </Link>
 
-        <nav className="ml-6 hidden items-center gap-5 lg:ml-8 lg:flex xl:gap-6">
+        <nav className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-5 lg:flex xl:gap-7">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
                 'whitespace-nowrap text-sm font-medium transition-colors hover:text-foreground',
-                pathname === link.href || pathname.startsWith(`${link.href}/`)
+                pathname === link.href ||
+                  (link.href !== '/jobs' && pathname.startsWith(`${link.href}/`)) ||
+                  (link.href === '/candidate' && pathname === '/candidate')
                   ? 'text-foreground'
                   : 'text-foreground-muted'
               )}
@@ -160,7 +162,7 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="relative z-10 flex shrink-0 items-center gap-2">
           {!ready ? (
             <div className="h-9 w-16 animate-pulse rounded-md bg-background-muted sm:w-20" />
           ) : isCandidate ? (
