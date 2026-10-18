@@ -7,7 +7,7 @@ import { jobs } from '@/data/jobs'
 import { StatusBadge } from '@/components/common/status-badge'
 import { candidates } from '@/data/candidates'
 import { formatRelativeTime } from '@/lib/utils'
-import { Plus, Briefcase, FileText } from 'lucide-react'
+import { Plus, FileText } from 'lucide-react'
 
 export default function HRDashboard() {
   const activeJobs = jobs.filter(j => j.status === 'active')

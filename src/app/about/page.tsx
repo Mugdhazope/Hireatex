@@ -36,7 +36,7 @@ export default function AboutPage() {
               <h2 className="text-2xl font-semibold text-foreground mb-4">Why Choose HiretaX</h2>
               <p>
                 Unlike general recruitment platforms, HiretaX specializes solely in clinical research talent. 
-                We understand the unique requirements of the pharmaceutical and healthcare industries, and we're 
+                We understand the unique requirements of the pharmaceutical and healthcare industries, and we are
                 committed to making the application process as simple and efficient as possible for candidates.
               </p>
             </section>

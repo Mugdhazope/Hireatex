@@ -15,26 +15,26 @@ export default function Home() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="bg-background py-20 md:py-32">
+        <section className="bg-background py-16 sm:py-24 md:py-36">
           <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl mx-auto text-center">
-              <p className="text-sm font-medium text-primary mb-4 tracking-wide uppercase">
-                PHARMA · HEALTHCARE · LIFE SCIENCES
+            <div className="mx-auto max-w-2xl text-center">
+              <p className="mb-4 text-[0.65rem] font-medium uppercase tracking-[0.14em] text-primary sm:mb-5 sm:text-xs">
+                Pharma · Healthcare · Life Sciences
               </p>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-foreground mb-6">
+              <h1 className="mb-4 text-[2rem] font-semibold leading-[1.1] tracking-tight text-foreground sm:mb-5 sm:text-4xl md:text-5xl lg:text-[3.25rem]">
                 Find your next opportunity
               </h1>
-              <p className="text-lg text-foreground-muted mb-8 max-w-2xl mx-auto">
-                Connect with leading pharmaceutical and healthcare companies. Start your career in clinical research today.
+              <p className="mx-auto mb-8 max-w-xl text-sm leading-relaxed text-foreground-muted sm:mb-10 sm:text-base md:text-lg">
+                Roles in clinical research, regulatory, and life sciences — apply in minutes.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Button size="lg" asChild>
+              <div className="flex flex-col justify-center gap-3 sm:flex-row">
+                <Button size="lg" className="w-full sm:w-auto" asChild>
                   <Link href="/jobs">
                     Explore Jobs
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild>
+                <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
                   <Link href="/for-candidates">For Candidates</Link>
                 </Button>
               </div>

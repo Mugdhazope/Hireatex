@@ -1,12 +1,20 @@
+import { normalizeCandidate } from '@/lib/normalize-candidate'
 import type { Candidate } from '@/types'
 
-export const candidates: Candidate[] = [
+const seedCandidates = [
   {
     id: 'cand-1',
     fullName: 'Sarah Chen',
     email: 'sarah.chen@email.com',
     phone: '+1-617-555-0101',
+    location: 'Boston, MA',
+    headline: 'Clinical Research Coordinator',
+    bio: 'Experienced CRC focused on oncology trials and patient recruitment.',
     resumeUrl: '/resumes/sarah-chen.pdf',
+    certifications: [{ id: 'cert-1', name: 'GCP Certification', issuer: 'NIH', year: 2023 }],
+    careerInterests: ['Clinical Research', 'Oncology'],
+    preferredRoles: ['Clinical Research Associate', 'Clinical Research Coordinator'],
+    preferredLocations: ['Boston, MA', 'Remote'],
     education: [
       {
         id: 'edu-1',
@@ -503,3 +511,5 @@ export const candidates: Candidate[] = [
     createdAt: new Date('2026-08-08'),
   },
 ]
+
+export const candidates: Candidate[] = seedCandidates.map(normalizeCandidate)

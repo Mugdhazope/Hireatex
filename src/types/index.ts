@@ -1,6 +1,6 @@
 // Core entity types for HiretaX
 
-export type ApplicationStatus = 
+export type ApplicationStatus =
   | 'applied'
   | 'under_review'
   | 'shortlisted'
@@ -9,19 +9,19 @@ export type ApplicationStatus =
   | 'selected'
   | 'rejected'
 
-export type JobType = 
+export type JobType =
   | 'full-time'
   | 'part-time'
   | 'contract'
   | 'internship'
 
-export type ExperienceLevel = 
+export type ExperienceLevel =
   | 'entry'
   | 'mid'
   | 'senior'
   | 'lead'
 
-export type JobCategory = 
+export type JobCategory =
   | 'clinical-research'
   | 'regulatory-affairs'
   | 'pharmacovigilance'
@@ -63,6 +63,22 @@ export interface Experience {
   description?: string
 }
 
+export interface Certification {
+  id: string
+  name: string
+  issuer?: string
+  year?: number
+}
+
+export interface ResumeFileMeta {
+  id: string
+  name: string
+  size: number
+  mimeType: string
+  uploadedAt: Date
+  isDefault: boolean
+}
+
 export interface Job {
   id: string
   title: string
@@ -88,11 +104,23 @@ export interface Candidate {
   email: string
   phone: string
   password?: string
-  resumeUrl?: string
+  location?: string
+  headline?: string
+  bio?: string
+  avatarUrl?: string
   education: Education[]
   experience: Experience[]
   skills: Skill[]
+  certifications: Certification[]
+  careerInterests: string[]
+  preferredRoles: string[]
+  preferredLocations: string[]
+  resumes: ResumeFileMeta[]
+  /** @deprecated use resumes; kept for seed compatibility */
+  resumeUrl?: string
   profileComplete: boolean
+  emailVerified: boolean
+  onboardingComplete: boolean
   createdAt: Date
 }
 
@@ -103,8 +131,16 @@ export interface Application {
   status: ApplicationStatus
   appliedDate: Date
   resumeUrl: string
+  resumeId?: string
+  coverLetter?: string
   notes?: string
   internalNotes?: string
+}
+
+export interface SavedJob {
+  candidateId: string
+  jobId: string
+  savedAt: Date
 }
 
 export interface HRUser {
@@ -121,7 +157,15 @@ export interface AdminUser extends HRUser {
   role: 'admin'
 }
 
-// View models (enriched data for UI)
+export interface AuthUser {
+  id: string
+  name: string
+  email: string
+  role: 'candidate' | 'hr' | 'admin'
+  candidateId?: string
+  emailVerified?: boolean
+}
+
 export interface ApplicationWithDetails extends Application {
   candidate: Candidate
   job: Job
@@ -133,4 +177,25 @@ export interface JobWithApplications extends Job {
 
 export interface CandidateWithApplications extends Candidate {
   applications: ApplicationWithDetails[]
+}
+
+export interface ParsedResumeData {
+  fullName?: string
+  email?: string
+  phone?: string
+  skills: string[]
+  education: Array<{
+    degree?: string
+    field?: string
+    institution?: string
+    year?: number
+  }>
+  experience: Array<{
+    title?: string
+    company?: string
+    location?: string
+    description?: string
+  }>
+  rawText: string
+  warnings: string[]
 }

@@ -37,7 +37,7 @@ export default function ForCandidatesPage() {
                     <h3 className="font-medium text-foreground">Direct Connection</h3>
                   </div>
                   <p className="text-sm text-foreground-muted">
-                    We connect you directly with hiring companies when you're a match.
+                    We connect you directly with hiring companies when you are a match.
                   </p>
                 </div>
 
@@ -97,7 +97,7 @@ export default function ForCandidatesPage() {
                   <div>
                     <h3 className="font-medium text-foreground mb-1">Get Connected</h3>
                     <p className="text-sm text-foreground-muted">
-                      When you're shortlisted, we forward your profile to the hiring company.
+                      When you are shortlisted, we forward your profile to the hiring company.
                     </p>
                   </div>
                 </div>

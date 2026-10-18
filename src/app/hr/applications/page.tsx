@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { HRSidebar } from '@/components/layout/hr-sidebar'
 import { PageHeader } from '@/components/common/page-header'
 import { Card, CardContent } from '@/components/ui/card'
